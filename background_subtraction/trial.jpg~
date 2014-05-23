@@ -1,0 +1,34 @@
+#include<opencv2/opencv.hpp>
+#include<iostream>
+#include<vector>
+ 
+using namespace cv;
+
+int main()
+{
+   VideoCapture feed( "/media/Work-sony/Sports_analysis/TT/4.MPG");
+   Mat image;
+   Mat background = imread("background.jpg");
+  // Mat image = imread ( "/home/mayank/Pictures/Webcam/image.jpg");
+   Mat foreground,diff;
+Mat dst;
+   while(1){
+   feed >> image;
+   absdiff(background,image,diff);
+   cvtColor(diff, diff, CV_BGR2GRAY);
+   imshow("video",diff);
+   
+threshold(diff,foreground,40,255,THRESH_BINARY);
+medianBlur(foreground,foreground,9);
+ 
+        erode(foreground,foreground,Mat());
+        dilate(foreground,foreground,Mat());
+image.copyTo(dst,foreground);
+   imshow("video_view",dst);
+char key = (char) waitKey(20);
+        if(key == 32){
+	imwrite("/home/mayank/dst.jpg",dst);
+    }
+   }
+   // return 0;
+}
